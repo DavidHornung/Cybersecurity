@@ -1,0 +1,57 @@
+import hashlib
+import itertools
+
+hashed_phone_numbers = {
+    "participants": [
+        {
+            "work phone": "",#Salt
+            "mobile phone": "",#mobile_phone
+            "contacts": ["","",""]
+        },
+        {
+            "work phone": "",#workphone
+            "mobile phone": "",
+            "contacts": ["",""]
+        }
+    ]
+}
+
+Salt=hashed_phone_numbers["participants"][0]["work phone"]
+workphone=hashed_phone_numbers["participants"][1]["work phone"]
+mobile_phone=hashed_phone_numbers["participants"][0]["mobile phone"]
+
+def md5(str):
+    return hashlib.md5(str.encode()).hexdigest()
+
+
+Number_To_Find_The_Salt= ""
+
+
+
+def searching_the_salt():
+    for generated_salt in itertools.product(range(10), repeat=6):# generate the 6 salt numbers
+        concatenation_of_salt ="".join(map(str, generated_salt))# create a list from itertools
+        Fusion_work_phone_and_salt = str(Number_To_Find_The_Salt) + concatenation_of_salt#merge job number with salt
+        Hash_work_phone_and_salt: str = md5(Fusion_work_phone_and_salt)# hash creation
+        if Hash_work_phone_and_salt==Salt or Hash_work_phone_and_salt == workphone:
+            return concatenation_of_salt#salt= 989796
+
+def searching_the_mobile_phone():
+    print("With wich salt do you want try ?")
+    Input_user = input()
+    for generated_mobile_phone in itertools.product(range(10),repeat=7):# generate numbers to find the cell phone
+        concatenation_of_number_for_mobile_phone ="".join(map(str,generated_mobile_phone))# create a list from itertools
+        mobile_phone_and_salt = "079"+concatenation_of_number_for_mobile_phone+Input_user#merge the beginning of the phone number with the search numbers and salt
+        hash_of_mobile_phone_and_salt: str = md5(mobile_phone_and_salt)
+        print(mobile_phone_and_salt)
+        if hash_of_mobile_phone_and_salt==mobile_phone:
+            return concatenation_of_number_for_mobile_phone#1234567
+
+
+
+
+if __name__ == '__main__':
+    print(Salt)
+    print(workphone)
+    print(searching_the_salt())
+    print(searching_the_mobile_phone())
